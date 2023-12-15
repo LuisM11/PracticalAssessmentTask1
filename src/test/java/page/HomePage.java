@@ -23,6 +23,7 @@ public class HomePage extends AbstractPage{
         return new LoginPage(driver);
     }
 
+
     @Override
     public HomePage openPage() {
         logger.info("Opening home page");
