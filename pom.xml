@@ -63,7 +63,7 @@
                 <configuration>
                     <systemPropertyVariables>
                         <browser>chrome</browser>
-                        <env>prod</env>
+                        <env>qa</env>
                     </systemPropertyVariables>
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/resources/testng-all.xml</suiteXmlFile>
