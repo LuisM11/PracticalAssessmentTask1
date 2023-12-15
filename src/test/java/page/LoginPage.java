@@ -69,9 +69,9 @@ public class LoginPage extends AbstractPage{
             element.sendKeys(Keys.BACK_SPACE);
         }
     }
-    public LoginPage submitLoginForm() {
+    public HomePage submitLoginForm() {
         click(loginButton);
-        return new LoginPage(driver);
+        return new HomePage(driver);
     }
 
     public LoginPage enterLogin(LoginCredentials credentials) {
