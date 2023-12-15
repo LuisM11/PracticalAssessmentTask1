@@ -1,8 +1,7 @@
 package test;
 
 import model.LoginCredentials;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -13,6 +12,7 @@ import page.ProfilePage;
 
 import java.util.stream.Stream;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class LoginPageTest extends CommonTestsConditions {
 
     public static Stream<Arguments> incorrectCredentials() {
@@ -31,6 +31,7 @@ public class LoginPageTest extends CommonTestsConditions {
 
 
     @Test
+    @Order(1)
     public void LoginWithEmptyCredentials() {
         String usernameExpectedError = "Please enter your Spotify username or email address.";
         String passwordExpectedError = "Please enter your password.";
@@ -42,8 +43,21 @@ public class LoginPageTest extends CommonTestsConditions {
         Assertions.assertEquals(passwordExpectedError, loginPage.getTextFieldError("password"));
     }
 
+
+    @ParameterizedTest
+    @MethodSource("incorrectCredentials")
+    @Order(2)
+    public void LoginWithIncorrectCredentials(LoginCredentials credentials) {
+        String expectedError = "Incorrect username or password.";
+        HomePage homePage = new HomePage(driver);
+        LoginPage loginPage = homePage.openPage().clickLoginButton().enterLogin(credentials);
+        loginPage.submitLoginForm();
+        Assertions.assertEquals(expectedError, loginPage.getBannerError());
+    }
+
     @ParameterizedTest
     @MethodSource("correctCredentials")
+    @Order(3)
     public void LoginWithCorrectCredentials(LoginCredentials credentials) {
         ProfilePage profilePage = new HomePage(driver)
                 .openPage()
@@ -52,19 +66,6 @@ public class LoginPageTest extends CommonTestsConditions {
                 .submitLoginForm()
                 .openProfile();
         Assertions.assertEquals(credentials.getName(), profilePage.getProfileTitle());
-
-
-    }
-
-
-    @ParameterizedTest
-    @MethodSource("incorrectCredentials")
-    public void LoginWithIncorrectCredentials(LoginCredentials credentials) {
-        String expectedError = "Incorrect username or password.";
-        HomePage homePage = new HomePage(driver);
-        LoginPage loginPage = homePage.openPage().clickLoginButton().enterLogin(credentials);
-        loginPage.submitLoginForm();
-        Assertions.assertEquals(expectedError, loginPage.getBannerError());
     }
 
 
